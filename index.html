@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twisst's Realistic Oscilloscope</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="oscilloscope">
+        <div class="screen-bezel">
+            <div class="screen">
+                <canvas id="scopeCanvas"></canvas>
+                <div class="grid-lines"></div>
+                <div class="overlay">
+                    <div class="info-text" id="infoText">
+                        CH1: 1V/div  Time: 1ms/div
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <h3>Vertical (CH1)</h3>
+                <div class="knob-row">
+                    <div class="knob-container">
+                        <div class="knob" data-for="vScale" data-scale="log"></div>
+                        <label>Scale</label>
+                        <div class="knob-value" id="val-vScale">2.0</div>
+                        <input type="range" id="vScale" min="0.01" max="20" step="0.01" value="2" class="hidden-range">
+                    </div>
+                    <div class="knob-container">
+                        <div class="knob" data-for="vPos"></div>
+                        <label>Pos</label>
+                        <div class="knob-value" id="val-vPos">0</div>
+                        <input type="range" id="vPos" min="-500" max="500" value="0" class="hidden-range">
+                    </div>
+                </div>
+                <label>Coupling</label>
+                <select id="couplingMode">
+                    <option value="ac">AC</option>
+                    <option value="dc">DC</option>
+                    <option value="gnd">GND</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <h3>Horizontal</h3>
+                <div class="knob-row">
+                    <div class="knob-container">
+                        <div class="knob" data-for="hScale" data-scale="log"></div>
+                        <label>Time</label>
+                        <div class="knob-value" id="val-hScale">1.0</div>
+                        <input type="range" id="hScale" min="0.1" max="10" step="0.1" value="1" class="hidden-range">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Trigger</h3>
+                <div class="knob-row">
+                    <div class="knob-container">
+                        <div class="knob" data-for="trigLevel"></div>
+                        <label>Level</label>
+                        <div class="knob-value" id="val-trigLevel">0.0</div>
+                        <input type="range" id="trigLevel" min="-5" max="5" step="0.1" value="0" class="hidden-range">
+                    </div>
+                </div>
+                <label>Mode</label>
+                <select id="trigMode">
+                    <option value="auto">Auto</option>
+                    <option value="normal">Normal</option>
+                    <option value="single">Single</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <h3>Display</h3>
+                <label>Plot Mode</label>
+                <select id="displayMode">
+                    <option value="time">Time Domain (Standard)</option>
+                    <option value="xy">X-Y (Lissajous)</option>
+                </select>
+                <label>Phosphor Color</label>
+                <select id="colorMode">
+                    <option value="green">Green (P31)</option>
+                    <option value="amber">Amber (P134)</option>
+                    <option value="blue">Blue (P11)</option>
+                    <option value="white">White (P4)</option>
+                    <option value="red">Red (P1)</option>
+                    <option value="purple">Purple</option>
+                    <option value="cyan">Cyan</option>
+                    <option value="yellow">Yellow</option>
+                </select>
+                <div class="knob-row" style="margin-top: 10px;">
+                    <div class="knob-container">
+                        <div class="knob" data-for="intensity"></div>
+                        <label>Intensity</label>
+                        <div class="knob-value" id="val-intensity">0.8</div>
+                        <input type="range" id="intensity" min="0.1" max="1" step="0.1" value="0.8" class="hidden-range">
+                    </div>
+                    <div class="knob-container">
+                        <div class="knob" data-for="focus"></div>
+                        <label>Focus</label>
+                        <div class="knob-value" id="val-focus">0.8</div>
+                        <input type="range" id="focus" min="0.1" max="1" step="0.1" value="0.8" class="hidden-range">
+                    </div>
+                    <div class="knob-container">
+                        <div class="knob" data-for="gridIntensity"></div>
+                        <label>Grid</label>
+                        <div class="knob-value" id="val-gridIntensity">0.5</div>
+                        <input type="range" id="gridIntensity" min="0" max="1" step="0.1" value="0.5" class="hidden-range">
+                    </div>
+                    <div class="knob-container">
+                        <div class="knob" data-for="persist"></div>
+                        <label>Persist</label>
+                        <div class="knob-value" id="val-persist">0.5</div>
+                        <input type="range" id="persist" min="0.1" max="0.95" step="0.05" value="0.5" class="hidden-range">
+                    </div>
+                    <div class="knob-container">
+                        <div class="knob" data-for="velSens"></div>
+                        <label>V. Sens</label>
+                        <div class="knob-value" id="val-velSens">10</div>
+                        <input type="range" id="velSens" min="0" max="100" step="1" value="10" class="hidden-range">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Signal Source</h3>
+                <select id="signalType">
+                    <option value="sine">Sine Wave</option>
+                    <option value="square">Square Wave</option>
+                    <option value="sawtooth">Sawtooth</option>
+                    <option value="noise">Noise</option>
+                    <option value="mic">Microphone (Audio)</option>
+                    <option value="file">Audio File</option>
+                </select>
+                <select id="audioDevice" style="display:none; margin-top: 5px;"></select>
+                
+                <div id="fileControl" style="display:none; margin-top: 5px; flex-direction: column; gap: 5px;">
+                    <input type="file" id="audioFileInput" accept="audio/*" style="font-size: 10px; color: #ccc;">
+                    <audio id="audioPlayer" controls style="width: 100%; height: 30px; margin-top: 5px;"></audio>
+                </div>
+                
+                <div id="micSensitivityControl" class="knob-row" style="display:none; margin-top: 10px;">
+                    <div class="knob-container">
+                        <div class="knob" data-for="micSensitivity"></div>
+                        <label>Mic Gain</label>
+                        <div class="knob-value" id="val-micSensitivity">1.0</div>
+                        <input type="range" id="micSensitivity" min="0.1" max="10" step="0.1" value="1" class="hidden-range">
+                    </div>
+                </div>
+
+                <div class="knob-row" style="margin-top: 10px;">
+                    <div class="knob-container">
+                        <div class="knob" data-for="sigFreq"></div>
+                        <label>Freq (Hz)</label>
+                        <div class="knob-value" id="val-sigFreq">440</div>
+                        <input type="range" id="sigFreq" min="1" max="2000" value="440" class="hidden-range">
+                    </div>
+                </div>
+                
+                <button id="powerBtn" class="power-btn"></button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
